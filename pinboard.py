@@ -6,70 +6,77 @@ import glob
 import re
 import time, calendar
 
+def download(TOKEN, XML, BOOKMARKS, QUERY = ""):
+	url = 'https://api.pinboard.in/v1/posts/all?format=json&auth_token=' + TOKEN
+	response = urllib2.urlopen(url)
+	response_items = response.read()
+	items = json.loads(response_items)
+	for i in range(len(items)-1):
+		item = items[i]
+		BOOKMARKS += item[u'description'].encode('utf8') + '\t' + item[u'extended'].encode('utf8') + '\t' + item[u'href'].encode('utf8') + '\t' + item[u'tags'].encode('utf8') + '\n'
+		if re.search(re.compile(QUERY, re.IGNORECASE), item[u'description']) or re.search(re.compile(QUERY, re.IGNORECASE), item[u'extended']) or re.search(re.compile(QUERY, re.IGNORECASE), item[u'tags']):
+			subtitletext = item[u'extended'] + " | " + item[u'tags'] if not item[u'extended'] == "" else item[u'tags']
+			XML.append ({
+				'title': item[u'description'],
+				'subtitle': subtitletext,
+				'arg': item[u'href'],
+				'icon': 'blue-' + `100-(10*i/len(items))*10` + '.png'
+			})
+	return [BOOKMARKS, XML]
+
 def list(TOKEN, CACHETIME, QUERY = ""):
-	# CHECK FOR RECENCY
-	t = 0
-	if not CACHETIME == 0:
-		try:
-			with open('timestamp.txt') as f:
-				t = f.read()
-			f.close()
-			if int(t) < 1:
-				f = open('timestamp.txt', 'w')
-				f.write(`calendar.timegm(time.gmtime())`)
-				f.close()
-		except IOError:
-			f = open('timestamp.txt', 'w')
-			t = calendar.timegm(time.gmtime())
-			f.write(`t`)
-			f.close()
-	# PARSE ITEMS
 	xml = []
+	t = 0
+	b = ''
+	currentTime = calendar.timegm(time.gmtime())
+	if not CACHETIME == 0:
+		# CHECK FOR RECENCY
+		try:
+			with open('bookmarks.txt') as f:
+				t = int(f.readline())
+			f.close()
+		except IOError:
+			t = currentTime
+	# PARSE ITEMS
 	if not QUERY == "":
 		xml.append ({
 					'title': 'Search for ' + `QUERY`,
 					'arg': 'https://pinboard.in/search/u:' + TOKEN.split(':')[0] + '?query=' + QUERY.replace(' ', '+') + '&fulltext=on',
 					'icon': 'icon.png'
 				})
-	if calendar.timegm(time.gmtime()) - int(t) > CACHETIME or abs(calendar.timegm(time.gmtime()) - int(t)) < 5 or CACHETIME == 0:
+	if currentTime - t > CACHETIME or abs(currentTime - t) < 5 or CACHETIME == 0:
 		# GET JSON DATA
-		url = 'https://api.pinboard.in/v1/posts/all?format=json&auth_token=' + TOKEN
-		response = urllib2.urlopen(url)
-		response_items = response.read()
-		items = json.loads(response_items)
-		for i in range(len(items)-1):
-			item = items[i]
-			if not CACHETIME == 0:
-				try:
-					with open('bookmarks/' + item[u'time'] + '.txt') as f:
-						pass
-					f.close()
-				except IOError:
-					f = open('bookmarks/' + item[u'time'] + '.txt', 'w')
-					f.write(item[u'description'].encode('utf8') + '\t' + item[u'extended'].encode('utf8') + '\t' + item[u'href'].encode('utf8') + '\t' + item[u'tags'].encode('utf8'))
-					f.close()
-			if re.search(re.compile(QUERY, re.IGNORECASE), item[u'description']) or re.search(re.compile(QUERY, re.IGNORECASE), item[u'extended']) or re.search(re.compile(QUERY, re.IGNORECASE), item[u'tags']):
-				subtitletext = item[u'extended'] + " | " + item[u'tags'] if not item[u'extended'] == "" else item[u'tags']
-				xml.append ({
-					'title': item[u'description'],
-					'subtitle': subtitletext,
-					'arg': item[u'href'],
-					'icon': 'blue-' + `100-(10*i/len(items))*10` + '.png'
-				})
+		b = `t` + '\n'
+		(b, xml) = download(TOKEN, xml, b, QUERY)
+		if not CACHETIME == 0:
+			f = open('bookmarks.txt', 'w')
+			f.write(b)
+			f.close
 	else:
 		# READ BOOKMARKS FROM DISK
 		items = []
-		for h in glob.glob('bookmarks/*.txt'):
-			with open(h) as f:
-				t = f.read()
+		try:
+			f = open('bookmarks.txt', 'r')
+			b = f.read()
 			f.close()
-			t = t.split('\t')
-			items.append(t)
-		items = items[::-1]
+			items = b.split('\n')
+			del items[0]
+		except IOError:
+			# GET JSON DATA
+			b = `t` + '\n'
+			(b, xml) = download(TOKEN, xml, b, QUERY)
+			if not CACHETIME == 0:
+				f = open('bookmarks.txt', 'w')
+				f.write(b)
+				f.close
+			items = b.split('\n')
 		for i in range(len(items)-1):
-			item = items[i]
+			item = items[i].split('\t')
 			if re.search(re.compile(QUERY, re.IGNORECASE), item[0]) or re.search(re.compile(QUERY, re.IGNORECASE), item[1]) or re.search(re.compile(QUERY, re.IGNORECASE), item[3]):
-				subtitletext = item[1] + " | " + item[3] if not item[1] == "" else item[3]
+				try:
+					subtitletext = item[1] + " | " + item[3] if not item[1] == "" else item[3]
+				except IndexError:
+					subtitletext = item[1]
 				xml.append({
 					'title': item[0].decode('utf8'),
 					'subtitle': subtitletext.decode('utf8'),
