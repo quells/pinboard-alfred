@@ -5,7 +5,7 @@ A Python script to display Pinboard bookmarks in the Alfred window. You will nee
 
 # Installation
 
-To install the Pinboard workflow, double click on ```Pinboard.alfredworkflow``` or drag the workflow to the workflow window in Alfred.
+To install the [Pinboard workflow](https://github.com/quells/pinboard-alfred2/blob/master/Pinboard.alfredworkflow), double click on ```Pinboard.alfredworkflow``` or drag the workflow to the workflow window in Alfred.
 
 Find your API token on the [Pinboard settings page](https://pinboard.in/settings/password).
 
