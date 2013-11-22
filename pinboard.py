@@ -8,7 +8,8 @@ import time, calendar
 
 def list(TOKEN, CACHETIME, QUERY = ""):
 	# CHECK FOR RECENCY
-	if CACHETIME != 0:
+	t = 0
+	if not CACHETIME == 0:
 		try:
 			with open('timestamp.txt') as f:
 				t = f.read()
@@ -24,13 +25,7 @@ def list(TOKEN, CACHETIME, QUERY = ""):
 			f.close()
 	# PARSE ITEMS
 	xml = []
-	if not QUERY == "":
-		xml.append ({
-					'title': 'Search for ' + `QUERY`,
-					'arg': 'https://pinboard.in/search/u:' + TOKEN.split(':')[0] + '?query=' + QUERY.replace(' ', '+') + '&fulltext=on',
-					'icon': 'blue-100.png'
-				})
-	if calendar.timegm(time.gmtime()) - int(t) > CACHETIME or CACHETIME == 0:
+	if calendar.timegm(time.gmtime()) - int(t) > CACHETIME or abs(calendar.timegm(time.gmtime()) - int(t)) < 5 or CACHETIME == 0:
 		# GET JSON DATA
 		url = 'https://api.pinboard.in/v1/posts/all?format=json&auth_token=' + TOKEN
 		response = urllib2.urlopen(url)
@@ -38,7 +33,7 @@ def list(TOKEN, CACHETIME, QUERY = ""):
 		items = json.loads(response_items)
 		for i in range(len(items)-1):
 			item = items[i]
-			if CACHETIME != 0:
+			if not CACHETIME == 0:
 				try:
 					with open('bookmarks/' + item[u'time'] + '.txt') as f:
 						pass
