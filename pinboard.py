@@ -25,6 +25,12 @@ def list(TOKEN, CACHETIME, QUERY = ""):
 			f.close()
 	# PARSE ITEMS
 	xml = []
+	if not QUERY == "":
+		xml.append ({
+					'title': 'Search for ' + `QUERY`,
+					'arg': 'https://pinboard.in/search/u:' + TOKEN.split(':')[0] + '?query=' + QUERY.replace(' ', '+') + '&fulltext=on',
+					'icon': 'icon.png'
+				})
 	if calendar.timegm(time.gmtime()) - int(t) > CACHETIME or abs(calendar.timegm(time.gmtime()) - int(t)) < 5 or CACHETIME == 0:
 		# GET JSON DATA
 		url = 'https://api.pinboard.in/v1/posts/all?format=json&auth_token=' + TOKEN
