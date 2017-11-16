@@ -1,15 +1,15 @@
-Pinboard in Alfred 2
-====================
+Pinboard in Alfred
+==================
 
-A Python script to display Pinboard bookmarks in the Alfred window. You will need Alfred 2 and a regular Pinboard account to use this.
+A Python script to display Pinboard bookmarks in the Alfred window. You will need Alfred and a regular Pinboard account to use this.
 
 # Download
 
-[Pinboard workflow](https://github.com/quells/pinboard-alfred2/blob/master/Pinboard.alfredworkflow?raw=true)
+[Pinboard workflow](https://github.com/quells/pinboard-alfred/blob/master/Pinboard.alfredworkflow?raw=true)
 
 # Installation
 
-To install the [Pinboard workflow](https://github.com/quells/pinboard-alfred2/blob/master/Pinboard.alfredworkflow?raw=true), double click on ```Pinboard.alfredworkflow``` or drag the workflow to the workflow window in Alfred.
+To install the [Pinboard workflow](https://github.com/quells/pinboard-alfred/blob/master/Pinboard.alfredworkflow?raw=true), double click on ```Pinboard.alfredworkflow``` or drag the workflow to the workflow window in Alfred.
 
 Find your API token on the [Pinboard settings page](https://pinboard.in/settings/password).
 
@@ -25,7 +25,7 @@ To filter the results, add your query after a space. For example, ```pinb apple`
 
 # Disclaimers
 
-This script and associated Alfred workflow is released under the [MIT license](https://github.com/quells/pinboard-alfred2/blob/master/LICENSE).
+This script and associated Alfred workflow is released under the [MIT license](https://github.com/quells/pinboard-alfred/blob/master/LICENSE).
 
 The Pinboard name and logo are owned by Nine Fives Software. Kai Wells does not own or claim to own anything related to Pinboard.
 
