@@ -1,35 +1,44 @@
 Pinboard in Alfred
 ==================
 
-A Python script to display Pinboard bookmarks in the Alfred window. You will need Alfred and a regular Pinboard account to use this.
+A Python script to display Pinboard bookmarks in the Alfred window. You will need Alfred 5 and a regular Pinboard account to use this.
+
+v1 of this workflow is still available for older versions of Alfred, but requires Python 2 and is no longer actively supported.
 
 # Download
 
-[Pinboard workflow](https://github.com/quells/pinboard-alfred/blob/master/Pinboard.alfredworkflow?raw=true)
+[Pinboard workflow](https://github.com/quells/pinboard-alfred/blob/master/Pinboard%20v2.alfredworkflow?raw=true)
 
 # Installation
 
-To install the [Pinboard workflow](https://github.com/quells/pinboard-alfred/blob/master/Pinboard.alfredworkflow?raw=true), double click on ```Pinboard.alfredworkflow``` or drag the workflow to the workflow window in Alfred.
-
 Find your API token on the [Pinboard settings page](https://pinboard.in/settings/password).
 
-Next, edit the script filter by double clicking on it. Edit the line ```print list("TOKEN", 3600, "{query}")``` to fill in your API token and caching preference. The default value of 3600 means that the script will only try to cache your bookmarks if it has not done so in the last hour (3600 seconds). A value of 0 means that the script will never write to disk.
+Download the [workflow](https://github.com/quells/pinboard-alfred/blob/master/Pinboard%20v2.alfredworkflow?raw=true) and double click on ```Pinboard v2.alfredworkflow``` or drag the workflow to the workflow window in Alfred.
+
+Information about the workflow will be displayed. Paste your Pinboard API token into the field on the left.
 
 # How to use
 
-Simply type ```pinb``` (or whatever you configure) into Alfred. If your bookmarks are cached, they should appear in Alfred almost immediately. If not, downloading from the Pinboard server could take some time.
+Type `pinb` into Alfred. If your bookmarks are cached, they should appear in Alfred almost immediately. If not, downloading from the Pinboard server could take some time.
 
-Hitting ```enter``` while a bookmark is selected will open the URL associated with that bookmark in Safari. Holding ```alt``` while doing this will open the URL in Google Chrome.
+To filter the results, add your query after a space. For example, `pinb apple` will only display results with "apple" in the title, description, tags, or URL of the bookmark. This is case insensitive.
 
-To filter the results, add your query after a space. For example, ```pinb apple``` will only display results with ```apple``` in the title, description, or tags of the bookmark. This is case insensitive and is compatible with regular expression syntax, if you’re into that. The first result will open the Pinboard search page with the results of the query.
+Hitting `enter` while a bookmark is selected will open the URL for that bookmark in your default Web Browser.
 
 # Disclaimers
 
 This script and associated Alfred workflow is released under the [MIT license](https://github.com/quells/pinboard-alfred/blob/master/LICENSE).
 
-The Pinboard name and logo are owned by Nine Fives Software. Kai Wells does not own or claim to own anything related to Pinboard.
+This workflow is not endorsed by the Pinboard service or Nine Fives Software. The Pinboard name and logo are owned by Nine Fives Software. Kai Wells does not own or claim to own anything related to Pinboard.
 
 # Version History
+
+## 2.0.0 - August 13, 2022
+
+- Updated for Alfred 5 workflows
+- Rewrote script for Python 3
+- Local cache is stored in a sqlite database instead of a text file
+- Uses JSON for Alfred formatting instead of XML
 
 ## 1.0 - November 21, 2013
 
