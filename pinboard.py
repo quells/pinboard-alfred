@@ -53,6 +53,7 @@ def query_posts(db: sqlite3.Connection, query_values: List[str]):
             continue
         qor = []
         qor.append("description LIKE '%{}%'".format(qv))
+        qor.append("extended LIKE '%{}%'".format(qv))
         qor.append("href LIKE '%{}%'".format(qv))
         qor.append("tags LIKE '%{}%'".format(qv))
         wheres.append("({})".format(" OR ".join(qor)))
@@ -102,7 +103,7 @@ def get_posts(local: bool = False) -> List[Dict[str, str]]:
         # load from local file for development
         with open("pinboard.json") as f:
             return json.load(f)
-
+    
     params = apiParams.copy()
     params = ["{}={}".format(k, params[k]) for k in params]
     u = "{}/posts/all?{}".format(apiURL, "&".join(params))
